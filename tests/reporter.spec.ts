@@ -99,6 +99,7 @@ test.describe('Reporter handles stats', () => {
       formattedDurationSuite: '00:10 (mm:ss)',
       formattedAvgTestDuration: '00:00 (mm:ss)',
       failures: {},
+      flakes: {},
       workers: 1,
     });
   });
@@ -139,6 +140,7 @@ test.describe('Reporter handles stats', () => {
       formattedDurationSuite: '00:10 (mm:ss)',
       formattedAvgTestDuration: '00:10 (mm:ss)',
       failures: {},
+      flakes: {},
       workers: 1,
     });
   });
@@ -179,6 +181,7 @@ test.describe('Reporter handles stats', () => {
       formattedDurationSuite: '00:10 (mm:ss)',
       formattedAvgTestDuration: '00:00 (mm:ss)',
       failures: {},
+      flakes: {},
       workers: 1,
     });
   });
@@ -225,6 +228,7 @@ test.describe('Reporter handles stats', () => {
       formattedDurationSuite: '00:20 (mm:ss)',
       formattedAvgTestDuration: '00:10 (mm:ss)',
       failures: {},
+      flakes: {},
       workers: 1,
     });
   });
@@ -271,6 +275,7 @@ test.describe('Reporter handles stats', () => {
       formattedDurationSuite: '00:10 (mm:ss)',
       formattedAvgTestDuration: '00:10 (mm:ss)',
       failures: {},
+      flakes: {},
       workers: 2,
     });
   });

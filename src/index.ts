@@ -2,9 +2,15 @@ import * as fs from 'fs';
 
 import * as path from 'path';
 
-import { Reporter, TestCase, TestResult, TestStatus } from '@playwright/test/reporter';
+import {
+  Reporter,
+  TestCase,
+  TestResult,
+  TestStatus,
+} from '@playwright/test/reporter';
+
 import type { Stats, InputTemplate, OutputFile } from './types';
-import millisToMinuteSeconds from './utils';
+import millisecondsToMinuteSeconds from './utils';
 import DefaultReport from './defaultReport';
 
 const initialStats = (): Stats => ({
@@ -21,6 +27,7 @@ const initialStats = (): Stats => ({
   formattedDurationSuite: '',
   formattedAvgTestDuration: '',
   failures: {},
+  flakes: {},
   workers: 1,
 });
 
@@ -32,7 +39,7 @@ class PlaywrightReportSummary implements Reporter {
   private endTime: number;
 
   inputTemplate: InputTemplate;
-  
+
   resultMap: Map<string, TestStatus>;
 
   stats: Stats;
@@ -58,7 +65,6 @@ class PlaywrightReportSummary implements Reporter {
 
     const { file, line, column } = test.location;
     const testPath = `${file}:${line}:${column}`;
-    console.error('TEST:', testPath, result.status, outcome);
     if (this.resultMap.get(testPath) !== 'passed') this.resultMap.set(testPath, result.status);
 
     switch (outcome) {
@@ -66,12 +72,14 @@ class PlaywrightReportSummary implements Reporter {
         this.stats.expectedResults += 1;
         break;
       case 'flaky':
+        this.stats.flakes[testPath] = this.resultMap[testPath];
         this.stats.flakyTests += 1;
         break;
       case 'skipped':
         this.stats.testMarkedSkipped += 1;
         break;
       case 'unexpected':
+        this.stats.failures[testPath] = this.resultMap[testPath];
         if (retry === 0) this.stats.unexpectedResults += 1;
         break;
       default:
@@ -88,10 +96,10 @@ class PlaywrightReportSummary implements Reporter {
     this.stats.avgTestDuration = Math.ceil(
       this.stats.durationCPU / (this.stats.totalTestsRun || 1),
     );
-    this.stats.formattedAvgTestDuration = millisToMinuteSeconds(
+    this.stats.formattedAvgTestDuration = millisecondsToMinuteSeconds(
       this.stats.avgTestDuration,
     );
-    this.stats.formattedDurationSuite = millisToMinuteSeconds(
+    this.stats.formattedDurationSuite = millisecondsToMinuteSeconds(
       this.stats.durationSuite,
     );
     outputReport(this.stats, this.inputTemplate, this.outputFile);

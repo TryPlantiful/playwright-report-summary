@@ -15,6 +15,7 @@ const testStats = {
   formattedDurationSuite: '00:00 (mm:ss)',
   formattedAvgTestDuration: '00:01 (mm:ss)',
   failures: {},
+  flakes: {},
   workers: 1,
 };
 
