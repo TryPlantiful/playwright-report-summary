@@ -57,7 +57,7 @@ class PlaywrightReportSummary implements Reporter {
     if (outcome === 'skipped') this.stats.testMarkedSkipped += 1;
     if (outcome === 'flaky') this.stats.flakyTests += 1;
     if (outcome === 'unexpected') {
-      this.stats.failures[test.title] = result.status;
+      this.stats.failures[test.location] = result.status;
       if (retry === 0) {
         this.stats.unexpectedResults += 1;
       }
