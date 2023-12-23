@@ -16,6 +16,7 @@ const testStats = {
   formattedAvgTestDuration: '00:01 (mm:ss)',
   failures: {},
   flakes: {},
+  tests: {},
   workers: 1,
 };
 

@@ -66,20 +66,21 @@ class PlaywrightReportSummary implements Reporter {
     const { file, line, column } = test.location;
     const testPath = `${file}:${line}:${column}`;
     if (this.resultMap.get(testPath) !== 'passed') this.resultMap.set(testPath, result.status);
+    this.stats.tests[testPath] = this.resultMap.get(testPath);
 
     switch (outcome) {
       case 'expected':
         this.stats.expectedResults += 1;
         break;
       case 'flaky':
-        this.stats.flakes[testPath] = this.resultMap[testPath];
+        this.stats.flakes[testPath] = this.resultMap.get(testPath);
         this.stats.flakyTests += 1;
         break;
       case 'skipped':
         this.stats.testMarkedSkipped += 1;
         break;
       case 'unexpected':
-        this.stats.failures[testPath] = this.resultMap[testPath];
+        this.stats.failures[testPath] = this.resultMap.get(testPath);
         if (retry === 0) this.stats.unexpectedResults += 1;
         break;
       default:
