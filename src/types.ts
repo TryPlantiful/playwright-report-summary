@@ -11,6 +11,7 @@ export type Stats = {
   avgTestDuration: number;
   formattedDurationSuite: string;
   formattedAvgTestDuration: string;
+  expected: object;
   failures: object;
   flakes: object;
   tests: object;

@@ -26,6 +26,7 @@ const initialStats = (): Stats => ({
   avgTestDuration: 0,
   formattedDurationSuite: '',
   formattedAvgTestDuration: '',
+  expected: {},
   failures: {},
   flakes: {},
   tests: {},
@@ -41,8 +42,6 @@ class PlaywrightReportSummary implements Reporter {
 
   inputTemplate: InputTemplate;
 
-  resultMap: Map<string, TestStatus>;
-
   stats: Stats;
 
   constructor(
@@ -50,7 +49,6 @@ class PlaywrightReportSummary implements Reporter {
   ) {
     this.outputFile = options.outputFile;
     this.inputTemplate = options.inputTemplate;
-    this.resultMap = new Map();
   }
 
   onBegin(config, suite) {
@@ -62,28 +60,32 @@ class PlaywrightReportSummary implements Reporter {
 
   async onTestEnd(test: TestCase, result: TestResult) {
     const outcome = test.outcome();
-    const { retry } = result;
+    const { retry, status } = result;
 
     const { file, line, column } = test.location;
     const testPath = `${file}:${line}:${column}`;
-    if (this.resultMap.get(testPath) !== 'passed') this.resultMap.set(testPath, result.status);
-    this.stats.tests[testPath] = this.resultMap.get(testPath);
+    this.stats.tests[testPath] = status;
 
     switch (outcome) {
       case 'expected':
+        this.stats.expected[testPath] = status;
         this.stats.expectedResults += 1;
         break;
+
       case 'flaky':
-        this.stats.flakes[testPath] = this.resultMap.get(testPath);
+        this.stats.flakes[testPath] = status;
         this.stats.flakyTests += 1;
         break;
+
       case 'skipped':
         this.stats.testMarkedSkipped += 1;
         break;
+
       case 'unexpected':
-        this.stats.failures[testPath] = this.resultMap.get(testPath);
+        this.stats.failures[testPath] = status;
         if (retry === 0) this.stats.unexpectedResults += 1;
         break;
+
       default:
         break;
     }
@@ -104,6 +106,10 @@ class PlaywrightReportSummary implements Reporter {
     this.stats.formattedDurationSuite = millisecondsToMinuteSeconds(
       this.stats.durationSuite,
     );
+    Object.keys(this.stats.flakes).forEach((flake) => {
+      delete this.stats.expected[flake];
+      delete this.stats.failures[flake];
+    });
     outputReport(this.stats, this.inputTemplate, this.outputFile);
   }
 }
