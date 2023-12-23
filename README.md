@@ -30,7 +30,7 @@ Modify your `playwright.config.ts` file to include the reporter:
 
 ```typescript
   reporter: [
-    ['@skilbourn/playwright-report-summary', { outputFile: 'custom-summary.txt' }]],
+    ['@plantiful/playwright-report-summary', { outputFile: 'custom-summary.txt' }]],
     ['html'], // other reporters
     ['dot']
   ],
@@ -65,7 +65,7 @@ You may also create a custom report by leveraging the values in the [`stats`](#a
 ```typescript
 import type { PlaywrightTestConfig } from '@playwright/test';
 import { devices } from '@playwright/test';
-import type { Stats } from '@skilbourn/playwright-report-summary';
+import type { Stats } from '@plantiful/playwright-report-summary';
 
 function customReport(stats: Stats) {
   return `Greetings, hello, ${stats.expectedResults} tests passed as expected in ${stats.formattedDurationSuite}`;
@@ -75,7 +75,7 @@ const config: PlaywrightTestConfig = {
   ...
   reporter: [
     // Your custom report path and preferred name
-    ['@skilbourn/playwright-report-summary', { outputFile: 'custom-summary.txt', inputTemplate: customReport }]]
+    ['@plantiful/playwright-report-summary', { outputFile: 'custom-summary.txt', inputTemplate: customReport }]]
   ],
 
 ```
