@@ -53,14 +53,23 @@ class PlaywrightReportSummary implements Reporter {
     const outcome = test.outcome();
     const { retry } = result;
 
-    if (outcome === 'expected') this.stats.expectedResults += 1;
-    if (outcome === 'skipped') this.stats.testMarkedSkipped += 1;
-    if (outcome === 'flaky') this.stats.flakyTests += 1;
-    if (outcome === 'unexpected') {
-      this.stats.failures[test.location] = result.status;
-      if (retry === 0) {
-        this.stats.unexpectedResults += 1;
-      }
+    switch (outcome) {
+      case 'expected':
+        this.stats.expectedResults += 1;
+        break;
+      case 'flaky':
+        this.stats.flakyTests += 1;
+        break;
+      case 'skipped':
+        this.stats.testMarkedSkipped += 1;
+        break;
+      case 'unexpected':
+        const { file, line, column } = test.location;
+        this.stats.failures[`${file}:${line}:${column}`] = result.status;
+        if (retry === 0) this.stats.unexpectedResults += 1;
+        break;
+      default:
+        break;
     }
     this.stats.totalTestsRun += 1;
     this.stats.durationCPU += result.duration;
