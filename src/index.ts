@@ -28,6 +28,7 @@ const initialStats = (): Stats => ({
   formattedAvgTestDuration: '',
   failures: {},
   flakes: {},
+  tests: {},
   workers: 1,
 });
 
