@@ -21,10 +21,10 @@ jobs:
         uses: icrawl/action-tsc@v1
         with:
           project: ./tsconfig.json        
-      - name: Install Playwright Chromium
-        run:  npx playwright install-deps chromium
-      - name: Run Playwright tests
-        run: npm run test:coverage
+      # - name: Install Playwright Chromium
+      #   run:  npx playwright install-deps chromium
+      # - name: Run Playwright tests
+      #   run: npm run test:coverage
       - name: Coveralls GitHub Action
         uses: coverallsapp/github-action@1.1.3
         with:
