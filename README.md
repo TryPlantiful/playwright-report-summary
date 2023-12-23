@@ -1,29 +1,28 @@
 # 📜 🎭 Playwright Report Summary  🎭  📜
 
-[![Coverage Status](https://coveralls.io/repos/github/stephenkilbourn/playwright-report-summary/badge.svg?branch=main)](https://coveralls.io/github/stephenkilbourn/playwright-report-summary?branch=main)
+[![Coverage Status](https://coveralls.io/repos/github/TryPlantiful/playwright-report-summary/badge.svg?branch=main)](https://coveralls.io/github/TryPlantiful/playwright-report-summary?branch=main)
 
-Small text based custom reporter for Playwright.
+A small, text-based custom reporter for Playwright.
 It can be handy to publish test results for things such as an SNS message or minimal Slack update. This Tool allows you to generate smaller reports with basic info about your test run.
 
 ## Table of Contents
 
-* [✨ Installation ✨](#-configuration-)
-* [📍 Configuration 📍](#-configuration-)
-* [ Default Output 📜](#default-output-)
-* [Customizing Outputs 👨‍💻](#customizing-outputs-)
-* [Available Stats 🧰](#available-stats-)
+- [📜 🎭 Playwright Report Summary  🎭  📜](#--playwright-report-summary----)
+  - [Table of Contents](#table-of-contents)
+  - [✨ Installation ✨](#-installation-)
+    - [pnpm](#pnpm)
+  - [📍 Configuration 📍](#-configuration-)
+  - [Default Output 📜](#default-output-)
+  - [Customizing Outputs 👨‍💻](#customizing-outputs-)
+  - [Available Stats 🧰](#available-stats-)
 
 ## ✨ Installation ✨
 
-Run following commands:
+Run the following commands:
 
-### npm
+### pnpm
 
-`npm install @skilbourn/playwright-report-summary --save-dev`
-
-### yarn
-
-`yarn add @skilbourn/playwright-report-summary --dev`
+`pnpm add -D github:TryPlantiful/playwright-report-summary`
 
 ## 📍 Configuration 📍
 
@@ -61,31 +60,21 @@ Number of workers used for test run: 6
 
 ## Customizing Outputs 👨‍💻
 
-You may also create a custom report by leveraging the values in the [`stats`](#available-stats-🧰) object. To add a custom report leveraging your stats, create a function in the format:
+You may also create a custom report by leveraging the values in the [`stats`](#available-stats-) object. To add a custom report leveraging your stats by modifying your `playwright.config.ts` file with the following:
 
 ```typescript
+import type { PlaywrightTestConfig } from '@playwright/test';
+import { devices } from '@playwright/test';
 import type { Stats } from '@skilbourn/playwright-report-summary';
 
 function customReport(stats: Stats) {
   return `Greetings, hello, ${stats.expectedResults} tests passed as expected in ${stats.formattedDurationSuite}`;
 }
 
-export default customReport;
-```
-
-and then modify your `playwright.config.ts` file with the following:
-
-```typescript
-import type { PlaywrightTestConfig } from '@playwright/test';
-import { devices } from '@playwright/test';
-
-import customReport from './customReport';
- // Your custom report path and preferred name
-
-
 const config: PlaywrightTestConfig = {
   ...
   reporter: [
+    // Your custom report path and preferred name
     ['@skilbourn/playwright-report-summary', { outputFile: 'custom-summary.txt', inputTemplate: customReport }]]
   ],
 

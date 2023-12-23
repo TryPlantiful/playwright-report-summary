@@ -18,18 +18,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stephenkilbourn/playwright-report-summary.git"
+    "url": "git+https://github.com/TryPlantiful/playwright-report-summary.git"
   },
   "keywords": [
     "playwright",
     "report"
   ],
-  "author": "Stephen Kilbourn <stephenkilbourn@gmail.com>",
+  "author": "Plantiful Technologies <team@tryplantiful.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/stephenkilbourn/playwright-report-summary/issues"
+    "url": "https://github.com/TryPlantiful/playwright-report-summary/issues"
   },
-  "homepage": "https://github.com/stephenkilbourn/playwright-report-summary#readme",
+  "homepage": "https://github.com/TryPlantiful/playwright-report-summary#readme",
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@playwright/test": "^1.27.1",
