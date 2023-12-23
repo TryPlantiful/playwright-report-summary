@@ -2,12 +2,7 @@ import * as fs from 'fs';
 
 import * as path from 'path';
 
-import {
-  Reporter,
-  TestCase,
-  TestResult,
-  TestStatus,
-} from '@playwright/test/reporter';
+import { Reporter, TestCase, TestResult } from '@playwright/test/reporter';
 
 import type { Stats, InputTemplate, OutputFile } from './types';
 import millisecondsToMinuteSeconds from './utils';
