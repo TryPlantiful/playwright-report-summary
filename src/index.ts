@@ -2,7 +2,7 @@ import * as fs from 'fs';
 
 import * as path from 'path';
 
-import { Reporter, TestCase, TestResult } from '@playwright/test/reporter';
+import { Reporter, TestCase, TestResult, TestStatus } from '@playwright/test/reporter';
 import type { Stats, InputTemplate, OutputFile } from './types';
 import millisToMinuteSeconds from './utils';
 import DefaultReport from './defaultReport';
@@ -32,6 +32,8 @@ class PlaywrightReportSummary implements Reporter {
   private endTime: number;
 
   inputTemplate: InputTemplate;
+  
+  resultMap: Map<string, TestStatus>;
 
   stats: Stats;
 
@@ -40,6 +42,7 @@ class PlaywrightReportSummary implements Reporter {
   ) {
     this.outputFile = options.outputFile;
     this.inputTemplate = options.inputTemplate;
+    this.resultMap = new Map();
   }
 
   onBegin(config, suite) {
@@ -53,6 +56,11 @@ class PlaywrightReportSummary implements Reporter {
     const outcome = test.outcome();
     const { retry } = result;
 
+    const { file, line, column } = test.location;
+    const testPath = `${file}:${line}:${column}`;
+    console.log('TEST:', testPath, result.status, outcome);
+    if (this.resultMap.get(testPath) != 'passed') this.resultMap.set(testPath, result.status);
+
     switch (outcome) {
       case 'expected':
         this.stats.expectedResults += 1;
@@ -64,11 +72,7 @@ class PlaywrightReportSummary implements Reporter {
         this.stats.testMarkedSkipped += 1;
         break;
       case 'unexpected':
-        const { file, line, column } = test.location;
-        this.stats.failures[`${file}:${line}:${column}`] = result.status;
         if (retry === 0) this.stats.unexpectedResults += 1;
-        break;
-      default:
         break;
     }
     this.stats.totalTestsRun += 1;
