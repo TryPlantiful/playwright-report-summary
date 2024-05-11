@@ -58,7 +58,8 @@ class PlaywrightReportSummary implements Reporter {
     const { retry, status } = result;
 
     const { file, line, column } = test.location;
-    const testPath = `${file}:${line}:${column}`;
+    const fileRelativePath = file.slice(__dirname.length + 1);
+    const testPath = `${fileRelativePath}:${line}:${column}`;
     this.stats.tests[testPath] = status;
 
     switch (outcome) {
@@ -105,27 +106,29 @@ class PlaywrightReportSummary implements Reporter {
       delete this.stats.expected[flake];
       delete this.stats.failures[flake];
     });
-    outputReport(this.stats, this.inputTemplate, this.outputFile);
+    const outputPath = path.join(__dirname, this.outputFile || 'results.txt');
+    console.warn('writing report', outputPath, this.stats);
+    outputReport(this.stats, outputPath, this.inputTemplate);
   }
 }
 
 function outputReport(
   stats: Stats,
+  outputFile: string,
   inputTemplate?: Function,
-  outputFile: string = 'results.txt',
 ) {
   let reportString: string;
   const report = new DefaultReport(stats);
-  if (typeof inputTemplate === 'undefined') {
-    reportString = report.templateReport();
-  } else {
+  if (typeof inputTemplate === 'undefined') reportString = report.templateReport();
+  else {
     reportString = inputTemplate(stats);
     if (typeof reportString !== 'string') {
       throw new Error('custom input templates must return a string');
     }
   }
 
-  fs.mkdirSync(path.dirname(outputFile), { recursive: true });
+  const outputDir = path.dirname(outputFile);
+  if (fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
   fs.writeFileSync(outputFile, reportString);
 }
 

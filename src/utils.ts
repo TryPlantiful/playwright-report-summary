@@ -4,22 +4,14 @@ function millisToMinuteSeconds(milliseconds: number) {
   const minString = pad(min);
   const secString = pad(sec);
 
-  if (milliseconds > 0) {
-    if (milliseconds < 1000) {
-      return '00:01 (mm:ss)';
-    }
-    if (sec < 10) {
-      return `${minString}:${secString} (mm:ss)`;
-    }
-    return `${minString}:${secString} (mm:ss)`;
-  }
-  return '00:00 (mm:ss)';
+  if (milliseconds <= 0) return '00:00 (mm:ss)';
+  if (milliseconds < 1000) return '00:01 (mm:ss)';
+  if (sec < 10) return `${minString}:${secString} (mm:ss)`;
+  return `${minString}:${secString} (mm:ss)`;
 }
 
 function pad(value: number) {
-  if (value < 10) {
-    return `0${value}`;
-  }
+  if (value < 10) return `0${value}`;
   return value;
 }
 

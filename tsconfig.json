@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
       "target": "ESNext",
-      "module": "node16",
+      "module": "esnext",
       "moduleResolution": "node",
       "sourceMap": false,
       "outDir": "./dist",
@@ -9,6 +9,10 @@
       "allowSyntheticDefaultImports": true
   },
   "include": [
-    "./src"
+    "src",
+    "tests"
+  ],
+  "exclude": [
+    "node_modules"
   ]
 }
