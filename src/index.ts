@@ -57,9 +57,10 @@ class PlaywrightReportSummary implements Reporter {
     const outcome = test.outcome();
     const { retry, status } = result;
 
-    if (test.location == null) console.warn('location', test, result);
     const { file, line, column } = test.location;
-    const fileRelativePath = file.slice(__dirname.length + 1);
+    const curDir = path.dirname('.');
+    console.warn('curDir', curDir, __dirname, file);
+    const fileRelativePath = file;
     const testPath = `${fileRelativePath}:${line}:${column}`;
     this.stats.tests[testPath] = status;
 
