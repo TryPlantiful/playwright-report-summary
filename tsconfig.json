@@ -8,7 +8,6 @@
     "sourceMap": false,
     "target": "ESNext",
   },
-  "type": "module",
   "include": [
     "src"
   ],
