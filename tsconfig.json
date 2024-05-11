@@ -2,7 +2,7 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "declaration": true,
-    "module": "esnext",
+    "module": "node16",
     "moduleResolution": "node",
     "outDir": "./dist",
     "sourceMap": false,
@@ -10,8 +10,5 @@
   },
   "include": [
     "src"
-  ],
-  "exclude": [
-    "node_modules"
   ]
 }
