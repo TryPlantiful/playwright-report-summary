@@ -107,7 +107,7 @@ class PlaywrightReportSummary implements Reporter {
       delete this.stats.expected[flake];
       delete this.stats.failures[flake];
     });
-    const outputPath = path.join(__dirname, this.outputFile || 'results.txt');
+    const outputPath = this.outputFile || 'results.txt';
     console.warn('writing report', outputPath, this.stats);
     outputReport(this.stats, outputPath, this.inputTemplate);
   }
