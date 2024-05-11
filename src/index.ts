@@ -29,19 +29,22 @@ const initialStats = (): Stats => ({
 });
 
 class PlaywrightReportSummary implements Reporter {
-  outputFile: OutputFile;
-
-  private startTime: number;
-
-  private endTime: number;
+  basePath: string | null;
 
   inputTemplate: InputTemplate;
 
+  outputFile: OutputFile;
+
   stats: Stats;
 
+  private endTime: number;
+
+  private startTime: number;
+
   constructor(
-    options: { outputFile?: string; inputTemplate?: () => string } = {},
+    options: { basePath?: string; outputFile?: string; inputTemplate?: () => string } = {},
   ) {
+    this.basePath = options.basePath ?? null;
     this.outputFile = options.outputFile;
     this.inputTemplate = options.inputTemplate;
   }
@@ -58,10 +61,8 @@ class PlaywrightReportSummary implements Reporter {
     const { retry, status } = result;
 
     const { file, line, column } = test.location;
-    const curDir = path.dirname('.');
-    console.warn('curDir', curDir, __dirname, file);
-    const fileRelativePath = file;
-    const testPath = `${fileRelativePath}:${line}:${column}`;
+    const filePath = this.basePath ? file.slice(this.basePath.length + 1) : file;
+    const testPath = `${filePath}:${line}:${column}`;
     this.stats.tests[testPath] = status;
 
     switch (outcome) {
