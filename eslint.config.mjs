@@ -1,5 +1,4 @@
 import { includeIgnoreFile } from '@eslint/compat';
-import tsParser from '@typescript-eslint/parser';
 import eslint from '@eslint/js';
 import globals from 'globals';
 import fs from 'node:fs';
@@ -16,6 +15,8 @@ const ignores = Array.from(
   new Set([
     'node_modules',
     'dist',
+    "eslint.config.mjs",
+    ".prettierrc.js",
     ...gitignorePaths.filter((gitignorePath) => fs.existsSync(gitignorePath)).flatMap((gitignorePath) =>
       (includeIgnoreFile(path.resolve(__dirname, gitignorePath)).ignores || []).map((ignore) =>
         path.join(path.dirname(gitignorePath), ignore),
@@ -36,7 +37,6 @@ const config = tsEslint.config(
         ...globals.browser,
         ...globals.es2021,
         },
-      parser: tsParser,
       parserOptions: {
         project: [tsconfigPath],
         rootDir: path.resolve(__dirname),
