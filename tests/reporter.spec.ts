@@ -4,15 +4,20 @@ import { readFileSync } from 'fs';
 import mock from 'mock-fs';
 import PlaywrightReportSummary from '../src/index';
 
-const FakeTimers = require('@sinonjs/fake-timers');
+import FakeTimers from '@sinonjs/fake-timers';
 
 type MockConfig = Pick<Config, 'workers'>;
 type MockSuite = Pick<Suite, 'allTests'>;
-type MockTestCase = Pick<TestCase, 'expectedStatus' | 'outcome' | 'title'>;
+type MockTestCase = Pick<TestCase, 'expectedStatus' | 'outcome' | 'title' | 'location'>;
 type MockTestResult = Pick<TestResult, 'status' | 'duration' | 'retry'>;
 
 const mockedPassingTest: MockTestCase = {
   expectedStatus: 'passed',
+  location: {
+    file: 'expected-passed-test.ts',
+    line: 1,
+    column: 1,
+  },
   outcome: () => 'expected',
   title: 'mocked test',
 };
@@ -24,6 +29,11 @@ const mockedPassingResult: MockTestResult = {
 
 const mockedSkippedTest: MockTestCase = {
   expectedStatus: 'skipped',
+  location: {
+    file: 'skipped-skipped-test.ts',
+    line: 1,
+    column: 1,
+  },
   outcome: () => 'skipped',
   title: 'mocked test',
 };
@@ -35,6 +45,11 @@ const mockedSkippedResult: MockTestResult = {
 
 const mockedFailingTest: MockTestCase = {
   expectedStatus: 'passed',
+  location: {
+    file: 'unexpected-passed-test.ts',
+    line: 1,
+    column: 1,
+  },
   outcome: () => 'unexpected',
   title: 'failed mocked test',
 };
@@ -46,6 +61,11 @@ const mockedFailingResult: MockTestResult = {
 
 const mockedTimedOutTest: MockTestCase = {
   expectedStatus: 'passed',
+  location: {
+    file: 'unexpected-passed-test-timeout.ts',
+    line: 1,
+    column: 1,
+  },
   outcome: () => 'unexpected',
   title: 'timed out mocked test',
 };
@@ -57,6 +77,11 @@ const mockedTimedOutResult: MockTestResult = {
 
 const mockedPassingTestAfterRetries: MockTestCase = {
   expectedStatus: 'passed',
+  location: {
+    file: 'flaky-passed-test.ts',
+    line: 1,
+    column: 1,
+  },
   outcome: () => 'flaky',
   title: 'timed out mocked test',
 };
@@ -77,7 +102,7 @@ test.describe('Reporter handles stats', () => {
     };
     const playwrightReportSummary = new PlaywrightReportSummary();
 
-    const clock = FakeTimers.install();
+    const clock = FakeTimers.install({ shouldClearNativeTimers: true });
 
     await playwrightReportSummary.onBegin(mockConfig, mockSuite);
     clock.tick(10000);
@@ -111,15 +136,15 @@ test.describe('Reporter handles stats', () => {
       workers: 1,
     };
     const mockSuite: MockSuite = {
-      // @ts-ignore
+      // @ts-expect-error Migrating eslint
       allTests: () => [mockedPassingTest],
     };
-    const clock = FakeTimers.install();
+    const clock = FakeTimers.install({ shouldClearNativeTimers: true });
     const playwrightReportSummary = new PlaywrightReportSummary();
 
     await playwrightReportSummary.onBegin(mockConfig, mockSuite);
     await playwrightReportSummary.onTestEnd(
-      // @ts-ignore
+      // @ts-expect-error Migrating eslint
       mockedPassingTest,
       mockedPassingResult,
     );
@@ -141,10 +166,14 @@ test.describe('Reporter handles stats', () => {
       avgTestDuration: 10000,
       formattedDurationSuite: '00:10 (mm:ss)',
       formattedAvgTestDuration: '00:10 (mm:ss)',
-      expected: {},
+      expected: {
+        'expected-passed-test.ts:1:1': 'passed',
+      },
       failures: {},
       flakes: {},
-      tests: {},
+      tests: {
+        'expected-passed-test.ts:1:1': 'passed',
+      },
       workers: 1,
     });
   });
@@ -154,15 +183,15 @@ test.describe('Reporter handles stats', () => {
       workers: 1,
     };
     const mockSuite: MockSuite = {
-      // @ts-ignore
+      // @ts-expect-error Migrating eslint
       allTests: () => [mockedSkippedTest],
     };
     const playwrightReportSummary = new PlaywrightReportSummary();
-    const clock = FakeTimers.install();
+    const clock = FakeTimers.install({ shouldClearNativeTimers: true });
 
     await playwrightReportSummary.onBegin(mockConfig, mockSuite);
     await playwrightReportSummary.onTestEnd(
-      // @ts-ignore
+      // @ts-expect-error Migrating eslint
       mockedSkippedTest,
       mockedSkippedResult,
     );
@@ -187,7 +216,9 @@ test.describe('Reporter handles stats', () => {
       expected: {},
       failures: {},
       flakes: {},
-      tests: {},
+      tests: {
+        'skipped-skipped-test.ts:1:1': 'skipped',
+      },
       workers: 1,
     });
   });
@@ -197,22 +228,22 @@ test.describe('Reporter handles stats', () => {
       workers: 1,
     };
     const mockSuite: MockSuite = {
-      // @ts-ignore
+      // @ts-expect-error Migrating eslint
       allTests: () => [mockedPassingTest, mockedPassingTest],
     };
     const playwrightReportSummary = new PlaywrightReportSummary();
-    const clock = FakeTimers.install();
+    const clock = FakeTimers.install({ shouldClearNativeTimers: true });
 
     await playwrightReportSummary.onBegin(mockConfig, mockSuite);
     clock.tick(10000);
     await playwrightReportSummary.onTestEnd(
-      // @ts-ignore
+      // @ts-expect-error Migrating eslint
       mockedPassingTest,
       mockedPassingResult,
     );
     clock.tick(10000);
     await playwrightReportSummary.onTestEnd(
-      // @ts-ignore
+      // @ts-expect-error Migrating eslint
       mockedPassingTest,
       mockedPassingResult,
     );
@@ -233,10 +264,14 @@ test.describe('Reporter handles stats', () => {
       avgTestDuration: 10000,
       formattedDurationSuite: '00:20 (mm:ss)',
       formattedAvgTestDuration: '00:10 (mm:ss)',
-      expected: {},
+      expected: {
+        'expected-passed-test.ts:1:1': 'passed',
+      },
       failures: {},
       flakes: {},
-      tests: {},
+      tests: {
+        'expected-passed-test.ts:1:1': 'passed',
+      },
       workers: 1,
     });
   });
@@ -246,21 +281,21 @@ test.describe('Reporter handles stats', () => {
       workers: 2,
     };
     const mockSuite: MockSuite = {
-      // @ts-ignore
+      // @ts-expect-error Migrating eslint
       allTests: () => [mockedPassingTest, mockedPassingTest],
     };
     const playwrightReportSummary = new PlaywrightReportSummary();
-    const clock = FakeTimers.install();
+    const clock = FakeTimers.install({ shouldClearNativeTimers: true });
 
     await playwrightReportSummary.onBegin(mockConfig, mockSuite);
 
     await playwrightReportSummary.onTestEnd(
-      // @ts-ignore
+      // @ts-expect-error Migrating eslint
       mockedPassingTest,
       mockedPassingResult,
     );
     await playwrightReportSummary.onTestEnd(
-      // @ts-ignore
+      // @ts-expect-error Migrating eslint
       mockedPassingTest,
       mockedPassingResult,
     );
@@ -282,10 +317,14 @@ test.describe('Reporter handles stats', () => {
       avgTestDuration: 10000,
       formattedDurationSuite: '00:10 (mm:ss)',
       formattedAvgTestDuration: '00:10 (mm:ss)',
-      expected: {},
+      expected: {
+        'expected-passed-test.ts:1:1': 'passed',
+      },
       failures: {},
       flakes: {},
-      tests: {},
+      tests: {
+        'expected-passed-test.ts:1:1': 'passed',
+      },
       workers: 2,
     });
   });
@@ -295,20 +334,20 @@ test.describe('Reporter handles stats', () => {
       workers: 2,
     };
     const mockSuite: MockSuite = {
-      // @ts-ignore
+      // @ts-expect-error Migrating eslint
       allTests: () => [mockedFailingTest, mockedPassingTest],
     };
     const playwrightReportSummary = new PlaywrightReportSummary();
-    const clock = FakeTimers.install();
+    const clock = FakeTimers.install({ shouldClearNativeTimers: true });
 
     await playwrightReportSummary.onBegin(mockConfig, mockSuite);
     await playwrightReportSummary.onTestEnd(
-      // @ts-ignore
+      // @ts-expect-error Migrating eslint
       mockedFailingTest,
       mockedFailingResult,
     );
     await playwrightReportSummary.onTestEnd(
-      // @ts-ignore
+      // @ts-expect-error Migrating eslint
       mockedPassingTest,
       mockedPassingResult,
     );
@@ -331,7 +370,15 @@ test.describe('Reporter handles stats', () => {
       avgTestDuration: 10000,
       formattedDurationSuite: '00:10 (mm:ss)',
       formattedAvgTestDuration: '00:10 (mm:ss)',
-      failures: { 'failed mocked test': 'failed' },
+      expected: {
+        'expected-passed-test.ts:1:1': 'passed',
+      },
+      flakes: { },
+      failures: { 'unexpected-passed-test.ts:1:1': 'failed' },
+      tests: {
+        'expected-passed-test.ts:1:1': 'passed',
+        'unexpected-passed-test.ts:1:1': 'failed',
+      },
       workers: 2,
     });
   });
@@ -341,25 +388,25 @@ test.describe('Reporter handles stats', () => {
       workers: 1,
     };
     const mockSuite: MockSuite = {
-      // @ts-ignore
+      // @ts-expect-error Migrating eslint
       allTests: () => [mockedPassingTestAfterRetries],
     };
     const playwrightReportSummary = new PlaywrightReportSummary();
-    const clock = FakeTimers.install();
+    const clock = FakeTimers.install({ shouldClearNativeTimers: true });
 
     await playwrightReportSummary.onBegin(mockConfig, mockSuite);
     await playwrightReportSummary.onTestEnd(
-      // @ts-ignore
+      // @ts-expect-error Migrating eslint
       mockedFailingTest,
       mockedFailingResult,
     );
     await playwrightReportSummary.onTestEnd(
-      // @ts-ignore
+      // @ts-expect-error Migrating eslint
       mockedTimedOutTest,
       mockedTimedOutResult,
     );
     await playwrightReportSummary.onTestEnd(
-      // @ts-ignore
+      // @ts-expect-error Migrating eslint
       mockedPassingTestAfterRetries,
       mockedPassingResultAfterRetries,
     );
@@ -382,9 +429,18 @@ test.describe('Reporter handles stats', () => {
       avgTestDuration: 10000,
       formattedDurationSuite: '00:30 (mm:ss)',
       formattedAvgTestDuration: '00:10 (mm:ss)',
+      expected: { },
+      flakes: {
+        "flaky-passed-test.ts:1:1": "passed",
+      },
       failures: {
-        'failed mocked test': 'failed',
-        'timed out mocked test': 'timedOut',
+        'unexpected-passed-test.ts:1:1': 'failed',
+        'unexpected-passed-test-timeout.ts:1:1': 'timedOut',
+      },
+      "tests": {
+        "flaky-passed-test.ts:1:1": "passed",
+        "unexpected-passed-test-timeout.ts:1:1": "timedOut",
+        "unexpected-passed-test.ts:1:1": "failed",
       },
       workers: 1,
     });
@@ -495,7 +551,7 @@ Number of workers used for test run: 1`;
 
     const playwrightReportSummary = new PlaywrightReportSummary({
       // ignoring the error to test scenario if someone ignores type
-      // @ts-ignore
+      // @ts-expect-error Migrating eslint
       inputTemplate: testInputTemplate,
     });
 

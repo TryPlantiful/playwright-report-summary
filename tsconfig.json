@@ -1,14 +1,24 @@
 {
   "compilerOptions": {
+    "allowJs": true,
     "allowSyntheticDefaultImports": true,
-    "declaration": true,
-    "module": "NodeNext",
-    "moduleResolution": "node",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "outDir": "./dist",
     "sourceMap": false,
-    "target": "ESNext",
+    "target": "esnext",
+    "esModuleInterop": true,
+    "resolveJsonModule": true
   },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
   "include": [
-    "src"
+    "eslint.config.mjs",
+    "playwright.config.ts",
+    "src",
+    "tests",
+    ".prettierrc.js"
   ]
 }

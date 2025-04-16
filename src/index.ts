@@ -42,7 +42,11 @@ class PlaywrightReportSummary implements Reporter {
   private startTime: number;
 
   constructor(
-    options: { basePath?: string; outputFile?: string; inputTemplate?: () => string } = {},
+    options: {
+      basePath?: string;
+      outputFile?: string;
+      inputTemplate?: () => string;
+    } = {},
   ) {
     this.basePath = options.basePath ?? null;
     this.outputFile = options.outputFile;
@@ -61,7 +65,9 @@ class PlaywrightReportSummary implements Reporter {
     const { retry, status } = result;
 
     const { file, line, column } = test.location;
-    const filePath = this.basePath ? file.slice(this.basePath.length + 1) : file;
+    const filePath = this.basePath
+      ? file.slice(this.basePath.length + 1)
+      : file;
     const testPath = `${filePath}:${line}:${column}`;
     this.stats.tests[testPath] = status;
 
@@ -90,7 +96,8 @@ class PlaywrightReportSummary implements Reporter {
     }
     this.stats.totalTestsRun += 1;
     this.stats.durationCPU += result.duration;
-    this.stats.failureFree = (this.stats.unexpectedResults - this.stats.flakyTests) === 0;
+    this.stats.failureFree =
+      this.stats.unexpectedResults - this.stats.flakyTests === 0;
   }
 
   async onEnd() {
@@ -117,11 +124,12 @@ class PlaywrightReportSummary implements Reporter {
 function outputReport(
   stats: Stats,
   outputFile: string,
-  inputTemplate?: Function,
+  inputTemplate?: (stats: Stats) => string,
 ) {
   let reportString: string;
   const report = new DefaultReport(stats);
-  if (typeof inputTemplate === 'undefined') reportString = report.templateReport();
+  if (typeof inputTemplate === 'undefined')
+    reportString = report.templateReport();
   else {
     reportString = inputTemplate(stats);
     if (typeof reportString !== 'string') {
@@ -130,7 +138,7 @@ function outputReport(
   }
 
   const outputDir = path.dirname(outputFile);
-  if (fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
+  if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
   fs.writeFileSync(outputFile, reportString);
 }
 

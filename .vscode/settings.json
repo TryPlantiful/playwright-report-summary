@@ -1,0 +1,58 @@
+{
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+  },
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "cSpell.customDictionaries": {
+    "plantiful": {
+      "addWords": true,
+      "description": "Plantiful dictionary",
+      "path": "./.vscode/dictionaries/plantiful.txt"
+    }
+  },
+  "cSpell.dictionaries": ["plantiful"],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  "editor.insertSpaces": true,
+  "editor.rulers": [110],
+  "editor.tabSize": 2,
+  "eslint.format.enable": true,
+  "eslint.validate": ["html", "javascript", "javascriptreact", "typescript", "typescriptreact"],
+  "jest.jestCommandLine": "pnpm jest --passWithNoTests",
+  "jest.nodeEnv": {
+    "NEXT_PUBLIC_TEST": "true",
+    "VSCODE": "true"
+  },
+  "jest.runMode": "on-demand",
+  "jestrunner.jestCommand": "VSCODE=true NEXT_PUBLIC_JEST=true pnpm jest",
+  "npm.packageManager": "pnpm",
+  "search.exclude": {
+    "**/__snapshots__": true,
+    "**/pnpm-lock.yaml": true,
+    "**/tsc-trace": true
+  },
+  "terminal.integrated.shellIntegration.history": 1000,
+  "typescript.preferences.autoImportFileExcludePatterns": ["antd"],
+  "typescript.tsdk": "node_modules/typescript/lib"
+}
