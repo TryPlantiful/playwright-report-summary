@@ -5,17 +5,18 @@
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "outDir": "./dist",
+    "rootDir": "./src",
     "sourceMap": false,
     "target": "esnext"
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "playwright.config.ts",
+    "tests",
+    ".prettierrc.js"
   ],
   "include": [
     "eslint.config.mjs",
-    "playwright.config.ts",
     "src",
-    "tests",
-    ".prettierrc.js"
   ]
 }
