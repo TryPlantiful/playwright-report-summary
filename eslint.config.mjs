@@ -15,13 +15,17 @@ const ignores = Array.from(
   new Set([
     'node_modules',
     'dist',
-    "eslint.config.mjs",
-    ".prettierrc.js",
-    ...gitignorePaths.filter((gitignorePath) => fs.existsSync(gitignorePath)).flatMap((gitignorePath) =>
-      (includeIgnoreFile(path.resolve(__dirname, gitignorePath)).ignores || []).map((ignore) =>
-        path.join(path.dirname(gitignorePath), ignore),
+    'eslint.config.mjs',
+    '.prettierrc.js',
+    'tests/',
+    ...gitignorePaths
+      .filter((gitignorePath) => fs.existsSync(gitignorePath))
+      .flatMap((gitignorePath) =>
+        (
+          includeIgnoreFile(path.resolve(__dirname, gitignorePath)).ignores ||
+          []
+        ).map((ignore) => path.join(path.dirname(gitignorePath), ignore)),
       ),
-    ),
   ]),
 ).sort();
 
@@ -31,12 +35,14 @@ const config = tsEslint.config(
   tsEslint.configs.recommended,
   tsEslint.configs.eslintRecommended,
   {
+    files: ['**/*.ts', '*.ts'],
+    ignores: ['playwright.config.ts'],
     languageOptions: {
       ecmaVersion: 'latest',
       globals: {
         ...globals.browser,
         ...globals.es2021,
-        },
+      },
       parserOptions: {
         project: [tsconfigPath],
         rootDir: path.resolve(__dirname),
@@ -45,12 +51,12 @@ const config = tsEslint.config(
     },
 
     rules: {
-        "import/extensions": 0,
-        "import/no-extraneous-dependencies": 0,
-        "import/no-unresolved": [0],
-        "no-empty-pattern": 0,
-        "no-undef": 0,
-        "no-use-before-define": 0
+      'import/extensions': 0,
+      'import/no-extraneous-dependencies': 0,
+      'import/no-unresolved': [0],
+      'no-empty-pattern': 0,
+      'no-undef': 0,
+      'no-use-before-define': 0,
     },
   },
 );

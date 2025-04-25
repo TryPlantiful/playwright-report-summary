@@ -8,7 +8,10 @@ import FakeTimers from '@sinonjs/fake-timers';
 
 type MockConfig = Pick<Config, 'workers'>;
 type MockSuite = Pick<Suite, 'allTests'>;
-type MockTestCase = Pick<TestCase, 'expectedStatus' | 'outcome' | 'title' | 'location'>;
+type MockTestCase = Pick<
+  TestCase,
+  'expectedStatus' | 'outcome' | 'title' | 'location'
+>;
 type MockTestResult = Pick<TestResult, 'status' | 'duration' | 'retry'>;
 
 const mockedPassingTest: MockTestCase = {
@@ -373,7 +376,7 @@ test.describe('Reporter handles stats', () => {
       expected: {
         'expected-passed-test.ts:1:1': 'passed',
       },
-      flakes: { },
+      flakes: {},
       failures: { 'unexpected-passed-test.ts:1:1': 'failed' },
       tests: {
         'expected-passed-test.ts:1:1': 'passed',
@@ -429,18 +432,18 @@ test.describe('Reporter handles stats', () => {
       avgTestDuration: 10000,
       formattedDurationSuite: '00:30 (mm:ss)',
       formattedAvgTestDuration: '00:10 (mm:ss)',
-      expected: { },
+      expected: {},
       flakes: {
-        "flaky-passed-test.ts:1:1": "passed",
+        'flaky-passed-test.ts:1:1': 'passed',
       },
       failures: {
         'unexpected-passed-test.ts:1:1': 'failed',
         'unexpected-passed-test-timeout.ts:1:1': 'timedOut',
       },
-      "tests": {
-        "flaky-passed-test.ts:1:1": "passed",
-        "unexpected-passed-test-timeout.ts:1:1": "timedOut",
-        "unexpected-passed-test.ts:1:1": "failed",
+      tests: {
+        'flaky-passed-test.ts:1:1': 'passed',
+        'unexpected-passed-test-timeout.ts:1:1': 'timedOut',
+        'unexpected-passed-test.ts:1:1': 'failed',
       },
       workers: 1,
     });

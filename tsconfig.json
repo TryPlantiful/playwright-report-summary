@@ -15,8 +15,5 @@
     "tests",
     ".prettierrc.js"
   ],
-  "include": [
-    "eslint.config.mjs",
-    "src",
-  ]
+  "include": ["eslint.config.mjs", "src/**/*.ts"]
 }
