@@ -1,6 +1,6 @@
 {
   "name": "@plantiful/playwright-report-summary",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "generate a customizable text summary of your playwright test results",
   "main": "./dist/index.js",
   "types": "./dist/types.d.ts",
@@ -9,10 +9,10 @@
   ],
   "scripts": {
     "build": "tsc -p ./tsconfig.json",
-    "lint": "npx eslint . --ext .ts",
+    "lint": "pnpm eslint . --ext .ts",
     "prettier": "prettier --write --loglevel warn \"**/**/*.ts\"",
-    "prepublish": "npm run build",
-    "test": "npx playwright test",
+    "prepublish": "pnpm run build",
+    "test": "pnpm playwright test",
     "typecheck": "tsc",
     "test:coverage": "nyc playwright test && nyc report --reporter=lcov --reporter=html"
   },
